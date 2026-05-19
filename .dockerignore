@@ -1,0 +1,12 @@
+.git
+.venv
+puku
+__pycache__
+*.pyc
+.pytest_cache
+.env
+data/qdrant
+data/copilot.db
+data/bm25_index.json
+data/uploads
+*.log

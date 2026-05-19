@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Insurance Copilot</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <main class="chat-shell">
+      <section class="chat-card">
+        <header class="chat-header">
+          <div>
+            <p>Insurance Copilot</p>
+            <h1>Ask about insurance</h1>
+          </div>
+          <span class="status">RAG ready</span>
+        </header>
+
+        <div id="messages" class="messages">
+          <article class="message assistant">
+            <div class="bubble">
+              Describe your claim scenario and I will triage whether it looks likely covered, likely not covered, or needs human review.
+            </div>
+          </article>
+        </div>
+
+        <section id="sourcesPanel" class="sources-panel" hidden>
+          <div class="meta-row">
+            <span id="latency">Latency: --</span>
+            <span id="sourceCount">Sources: 0</span>
+          </div>
+          <div id="sources" class="sources"></div>
+        </section>
+
+        <form id="chatForm" class="composer">
+          <input
+            id="queryInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Describe what happened in your claim..."
+          />
+          <button id="sendBtn" type="submit">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/assets/app.js"></script>
+  </body>
+</html>

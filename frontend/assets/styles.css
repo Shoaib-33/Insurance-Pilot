@@ -1,0 +1,224 @@
+:root {
+  --bg: #071015;
+  --panel: rgba(13, 27, 35, 0.88);
+  --panel-soft: rgba(18, 38, 48, 0.78);
+  --line: rgba(103, 232, 221, 0.22);
+  --text: #ecfbff;
+  --muted: #91aab2;
+  --cyan: #67e8dd;
+  --green: #a7f3c4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    linear-gradient(rgba(103, 232, 221, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(103, 232, 221, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, rgba(103, 232, 221, 0.14), transparent 34rem),
+    var(--bg);
+  background-size: 36px 36px, 36px 36px, auto, auto;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.chat-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+}
+
+.chat-card {
+  width: min(980px, 100%);
+  height: min(820px, calc(100vh - 56px));
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.45);
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-header p,
+.chat-header h1 {
+  margin: 0;
+}
+
+.chat-header p {
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chat-header h1 {
+  margin-top: 4px;
+  font-size: clamp(24px, 4vw, 40px);
+  letter-spacing: 0;
+}
+
+.status {
+  border: 1px solid rgba(167, 243, 196, 0.34);
+  color: var(--green);
+  padding: 8px 10px;
+  white-space: nowrap;
+  background: rgba(167, 243, 196, 0.07);
+}
+
+.messages {
+  overflow: auto;
+  padding: 22px;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 14px;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: min(720px, 88%);
+  padding: 14px 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  border: 1px solid rgba(145, 170, 178, 0.22);
+}
+
+.assistant .bubble {
+  background: rgba(9, 19, 25, 0.82);
+}
+
+.user .bubble {
+  background: rgba(103, 232, 221, 0.12);
+  border-color: rgba(103, 232, 221, 0.34);
+}
+
+.sources-panel {
+  border-top: 1px solid var(--line);
+  background: rgba(4, 12, 16, 0.48);
+  padding: 14px 22px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.meta-row span {
+  border: 1px solid var(--line);
+  color: #c9f7f4;
+  background: rgba(103, 232, 221, 0.07);
+  padding: 7px 9px;
+  font-size: 13px;
+}
+
+.sources {
+  display: grid;
+  gap: 8px;
+  max-height: 170px;
+  overflow: auto;
+}
+
+.source {
+  border: 1px solid rgba(145, 170, 178, 0.2);
+  background: var(--panel-soft);
+  padding: 10px;
+}
+
+.source strong {
+  color: var(--cyan);
+  font-size: 13px;
+}
+
+.source p,
+.empty-source {
+  margin: 7px 0 0;
+  color: #d5e8ec;
+  line-height: 1.45;
+  font-size: 14px;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 18px 22px 22px;
+  border-top: 1px solid var(--line);
+}
+
+.composer input {
+  min-height: 48px;
+  border: 1px solid rgba(145, 170, 178, 0.28);
+  background: #08161d;
+  color: var(--text);
+  outline: none;
+  padding: 0 14px;
+}
+
+.composer input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(103, 232, 221, 0.1);
+}
+
+.composer button {
+  min-width: 104px;
+  border: 1px solid rgba(103, 232, 221, 0.55);
+  color: var(--text);
+  background: linear-gradient(135deg, #0fb9b1, #176e84);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.composer button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+@media (max-width: 640px) {
+  .chat-shell {
+    padding: 0;
+  }
+
+  .chat-card {
+    min-height: 100vh;
+    height: 100vh;
+    border: 0;
+  }
+
+  .chat-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .composer {
+    grid-template-columns: 1fr;
+  }
+
+  .composer button {
+    min-height: 46px;
+  }
+}
