@@ -1,6 +1,12 @@
 .venv/
+puku/
 __pycache__/
 *.pyc
 .env
-data/
 .pytest_cache/
+
+data/qdrant/
+data/copilot.db
+data/bm25_index.json
+data/uploads/
+data/eval/ragas_results.json
