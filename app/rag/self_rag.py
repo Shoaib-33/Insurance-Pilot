@@ -17,7 +17,7 @@ class SelfRAG:
         fallback = {
             "should_retrieve": normalized not in simple_markers,
             "retrieve": normalized not in simple_markers,
-            "intent": "smalltalk" if normalized in simple_markers else "claim_scenario",
+            "intent": "smalltalk" if normalized in simple_markers else "out_of_domain",
             "risk_level": "low" if normalized in simple_markers else "medium",
         }
         result = self.llm.invoke_json(
@@ -27,7 +27,7 @@ class SelfRAG:
                 "Return JSON with exactly these keys:\n"
                 "- should_retrieve: boolean\n"
                 "- retrieve: boolean, same value as should_retrieve\n"
-                "- intent: one of smalltalk, general_insurance_concept, claim_scenario\n"
+                "- intent: one of smalltalk, general_insurance_concept, claim_scenario, out_of_domain\n"
                 "- risk_level: one of low, medium, high\n\n"
                 "Use general_insurance_concept for educational questions about insurance terms, "
                 "regulation, compliance, procedures, definitions, or how insurance works. These "
@@ -36,6 +36,11 @@ class SelfRAG:
                 "death, bill, repair, approval, denial, coverage, or asks whether insurance will pay. "
                 "These questions should retrieve.\n"
                 "Use smalltalk only for greetings or capability questions. These usually do not retrieve.\n"
+                "Use out_of_domain for questions that are not about insurance, insurance claims, "
+                "coverage, policies, documents, claim procedures, regulations, or this assistant's "
+                "insurance capability. Medical treatment, medicine dosage, birthday wishes, general "
+                "chitchat beyond a greeting, homework, coding, travel planning, and unrelated advice "
+                "are out_of_domain and should not retrieve.\n"
                 "High risk means coverage decisions, denial, settlement, legal, fraud, death, injury, "
                 "large loss, regulatory complaint, or money."
             ),
@@ -43,12 +48,12 @@ class SelfRAG:
             fallback=fallback,
         )
         intent = str(result.get("intent", fallback["intent"]))
-        if intent not in {"smalltalk", "general_insurance_concept", "claim_scenario"}:
+        if intent not in {"smalltalk", "general_insurance_concept", "claim_scenario", "out_of_domain"}:
             intent = fallback["intent"]
         should_retrieve = bool(result.get("should_retrieve", fallback["should_retrieve"]))
         if intent in {"general_insurance_concept", "claim_scenario"}:
             should_retrieve = True
-        if intent == "smalltalk":
+        if intent in {"smalltalk", "out_of_domain"}:
             should_retrieve = False
         risk_level = str(result.get("risk_level", fallback["risk_level"]))
         if risk_level not in {"low", "medium", "high"}:
