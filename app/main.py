@@ -12,7 +12,6 @@ from app.api.routes_review import router as review_router
 from app.core.config import settings
 from app.core.logging import configure_logging
 from app.db.sqlite import init_db
-from app.rag.bm25 import BM25Index
 from app.rag.ingestion import DocumentIngestionService
 from app.rag.qdrant_store import QdrantVectorStore
 
@@ -46,7 +45,6 @@ def startup() -> None:
     QdrantVectorStore().ensure_collections()
     if settings.auto_ingest_pdfs_on_startup:
         DocumentIngestionService().ingest_pdf_directory(settings.document_dir)
-    BM25Index.load_or_create().save()
 
 
 @app.get("/")

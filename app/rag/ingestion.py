@@ -97,6 +97,7 @@ class DocumentIngestionService:
         split_docs = self.splitter.split_documents(docs)
         chunk_records = []
         new_chunk_texts = []
+        bm25_docs = []
         skipped_chunks = 0
 
         for index, split_doc in enumerate(split_docs):
@@ -113,6 +114,14 @@ class DocumentIngestionService:
                 "source_name": source_name,
                 "text_hash": text_hash,
             }
+            bm25_docs.append(
+                {
+                    "id": chunk_id,
+                    "text": chunk,
+                    "source_name": source_name,
+                    "metadata": chunk_metadata,
+                }
+            )
             if self.cache.chunk_exists(text_hash):
                 skipped_chunks += 1
                 self.cache.save_chunk(chunk_id, doc_id, index, chunk, text_hash, chunk_metadata, embedded=False)
@@ -133,7 +142,7 @@ class DocumentIngestionService:
             )
 
         self.qdrant.upsert_chunks(points)
-        BM25Index.from_db().save()
+        self._merge_bm25_docs(bm25_docs)
 
         return {
             "status": "embedded",
@@ -141,3 +150,14 @@ class DocumentIngestionService:
             "embedded_chunks": len(points),
             "skipped_chunks": skipped_chunks,
         }
+
+    def _merge_bm25_docs(self, docs: list[dict[str, Any]]) -> None:
+        current = BM25Index.load_or_create()
+        by_hash = {
+            str(doc.get("metadata", {}).get("text_hash") or doc.get("id")): doc
+            for doc in current.docs
+        }
+        for doc in docs:
+            key = str(doc.get("metadata", {}).get("text_hash") or doc.get("id"))
+            by_hash[key] = doc
+        BM25Index(list(by_hash.values())).save()
