@@ -85,7 +85,7 @@ class ClaimsRAGGraph:
         workflow.add_conditional_edges(
             "load_memory",
             self._route_retrieval,
-            {"direct": "direct_response", "retrieve": "retrieve"},
+            {"direct": "direct_response", "out_of_domain": "direct_response", "retrieve": "retrieve"},
         )
         workflow.add_edge("direct_response", "finalize")
         workflow.add_edge("retrieve", "rerank")
@@ -173,6 +173,36 @@ class ClaimsRAGGraph:
     def _direct_response(self, state: RagState) -> RagState:
         if state.get("answer"):
             return state
+        if state.get("intent") == "out_of_domain":
+            state["answer"] = self._scope_message()
+            state["confidence"] = 0.98
+            state["sources"] = []
+            state["self_rag"] = {
+                "passed": True,
+                "retrieve": False,
+                "isrel": False,
+                "issup": False,
+                "isuse": True,
+                "confidence": 0.98,
+                "issues": ["Out-of-domain request blocked before retrieval."],
+            }
+            self._trace(state, "direct_response", {"reason": "out_of_domain"})
+            return state
+        if state.get("intent") == "smalltalk":
+            state["answer"] = self._scope_message()
+            state["confidence"] = 0.9
+            state["sources"] = []
+            state["self_rag"] = {
+                "passed": True,
+                "retrieve": False,
+                "isrel": False,
+                "issup": False,
+                "isuse": True,
+                "confidence": 0.9,
+                "issues": ["Smalltalk redirected to insurance scope."],
+            }
+            self._trace(state, "direct_response", {"reason": "smalltalk"})
+            return state
         answer = self.llm.invoke_text(
             system=(
                 "You are an insurance claims support copilot. Answer simple non-policy questions "
@@ -190,6 +220,12 @@ class ClaimsRAGGraph:
         }
         self._trace(state, "direct_response", {"confidence": state["confidence"]})
         return state
+
+    def _scope_message(self) -> str:
+        return (
+            "I can only help with insurance-related claims, coverage, policy terms, claim "
+            "documents, and claim procedures. Please ask an insurance claim question."
+        )
 
     def _retrieve(self, state: RagState) -> RagState:
         query = self._prepare_retrieval_query(state)
@@ -463,6 +499,8 @@ class ClaimsRAGGraph:
     def _route_retrieval(self, state: RagState) -> str:
         if state.get("answer") and "override system" in state["answer"]:
             return "direct"
+        if state.get("intent") == "out_of_domain":
+            return "out_of_domain"
         return "retrieve" if state.get("should_retrieve", True) else "direct"
 
     def _route_critique(self, state: RagState) -> str:
