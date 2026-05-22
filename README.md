@@ -4,6 +4,11 @@ An agentic RAG application for insurance claim support. The user describes a cla
 
 The project is designed as a portfolio-grade backend + simple futuristic chatbot frontend. It combines LangGraph orchestration, hybrid retrieval, Qdrant, FlashRank reranking, Groq generation, Self-RAG critique, semantic caching, LangMem-style memory, guardrails, and evaluation.
 
+
+## Demo Video
+
+[![Watch Demo]([https://cdn.loom.com/sessions/thumbnails/YOUR_VIDEO_ID-with-play.gif)](https://www.loom.com/share/YOUR_VIDEO_ID](https://www.loom.com/share/802c0e92627c4974ad695998c72634f9))
+
 ## Key Features
 
 - Scenario-based insurance claim triage
