@@ -7,9 +7,7 @@ The project is designed as a portfolio-grade backend + simple futuristic chatbot
 
 ## Demo Video
 
-[![Watch Demo]([https://cdn.loom.com/sessions/thumbnails/YOUR_VIDEO_ID-with-play.gif)](https://www.loom.com/share/YOUR_VIDEO_ID](https://www.loom.com/share/802c0e92627c4974ad695998c72634f9))
-
-## Key Features
+[![Loom Demo](https://cdn.loom.com/sessions/thumbnails/802c0e92627c4974ad695998c72634f9-with-play.gif)](https://www.loom.com/share/802c0e92627c4974ad695998c72634f9)## Key Features
 
 - Scenario-based insurance claim triage
 - FastAPI backend with plain HTML/CSS/JavaScript frontend
